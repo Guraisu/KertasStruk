@@ -1,0 +1,17 @@
+{
+  "name": "KertasStruk - Pembuat Struk UMKM",
+  "short_name": "KertasStruk",
+  "description": "Pembuat bukti penjualan praktis untuk usaha rumahan. Berfungsi penuh offline tanpa login.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#EBE6DC",
+  "theme_color": "#F9F6F0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='10' width='60' height='80' fill='%23F9F6F0' stroke='%231A1E24' stroke-width='6'/><line x1='35' y1='30' x2='65' y2='30' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='50' x2='65' y2='50' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='70' x2='50' y2='70' stroke='%231A1E24' stroke-width='4'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

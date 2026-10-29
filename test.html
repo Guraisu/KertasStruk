@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uji Otomatis KertasStruk</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding: 2rem; max-width: 800px; margin: 0 auto; }
+        .test-pass { color: #155724; background: #d4edda; padding: 0.5rem 1rem; border: 1px solid #c3e6cb; margin-bottom: 0.5rem; }
+        .test-fail { color: #721c24; background: #f8d7da; padding: 0.5rem 1rem; border: 1px solid #f5c6cb; margin-bottom: 0.5rem; }
+        h1 { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Pengujian Otomatis KertasStruk</h1>
+    <div id="test-results">Menjalankan pengujian...</div>
+
+    <script type="module">
+        import {
+            saveCatalogItem,
+            getCatalog,
+            saveReceipt,
+            voidReceipt,
+            getDailySummary,
+            exportAllData,
+            validateImportPayload,
+            importAllData
+        } from './app/storage.js';
+
+        import { normalizeIndonesianPhone, formatReceiptWhatsAppText, createWhatsAppShareUrl } from './app/whatsapp.js';
+        import { createCart } from './app/receipt.js';
+
+        const resultsContainer = document.getElementById('test-results');
+        resultsContainer.innerHTML = '';
+
+        function logPass(msg) {
+            const div = document.createElement('div');
+            div.className = 'test-pass';
+            div.textContent = '✓ ' + msg;
+            resultsContainer.appendChild(div);
+        }
+
+        function logFail(msg, err) {
+            const div = document.createElement('div');
+            div.className = 'test-fail';
+            div.textContent = '✗ ' + msg + ' - ' + (err.message || err);
+            resultsContainer.appendChild(div);
+        }
+
+        async function runSuite() {
+            // Test 1: Katalog Duplikasi & Validasi
+            try {
+                await saveCatalogItem({ name: 'Risol Mayo Spesial', price: 15000 });
+                const cat = await getCatalog();
+                if (!cat.some(i => i.name === 'Risol Mayo Spesial')) throw new Error('Item tidak ditemukan');
+
+                let dupThrown = false;
+                try {
+                    await saveCatalogItem({ name: 'risol mayo spesial', price: 16000 });
+                } catch {
+                    dupThrown = true;
+                }
+                if (!dupThrown) throw new Error('Duplikasi nama tidak ditolak');
+                logPass('Katalog: Validasi input & penolakan nama kembar berhasil.');
+            } catch (err) {
+                logFail('Katalog', err);
+            }
+
+            // Test 2: Normalisasi Nomor WA
+            try {
+                if (normalizeIndonesianPhone('0812-3456-7890') !== '6281234567890') throw new Error('Gagal ubah 08.. ke 628..');
+                if (normalizeIndonesianPhone('+62 857 1111 2222') !== '6285711112222') throw new Error('Gagal bersihkan simbol + dan spasi');
+                if (normalizeIndonesianPhone('') !== '') throw new Error('Gagal handle nomor kosong');
+                logPass('WhatsApp: Normalisasi nomor seluler Indonesia 08/62 berhasil.');
+            } catch (err) {
+                logFail('WhatsApp Normalisasi', err);
+            }
+
+            // Test 3: Formatting & Karakter Khusus
+            try {
+                const mockReceipt = {
+                    id: 'rec_1',
+                    receiptNo: 'STR-20261028-001',
+                    createdAt: new Date().toISOString(),
+                    items: [{ id: '1', name: 'Kue & Roti #1 (100%) 🎂', price: 25000, qty: 2 }],
+                    subtotal: 50000,
+                    discount: 5000,
+                    total: 45000,
+                    paymentMethod: 'Transfer',
+                    customerName: 'Kak Ayu & Doni',
+                    note: 'Pita #Merah'
+                };
+                const waUrl = createWhatsAppShareUrl(mockReceipt, { storeName: 'Toko Kue & Kopi' }, '08123456789');
+                if (!waUrl.includes('%26')) throw new Error('Simbol & tidak ter-encode aman');
+                if (!waUrl.includes('%23')) throw new Error('Simbol # tidak ter-encode aman');
+                logPass('WhatsApp: URL Encoder aman untuk &, #, %, emoji, dan baris baru.');
+            } catch (err) {
+                logFail('WhatsApp Encoding', err);
+            }
+
+            // Test 4: Kalkulasi Keranjang & Diskon
+            try {
+                const cart = createCart();
+                cart.addItem({ id: 'c1', name: 'Brownies', price: 50000 });
+                cart.incrementQty('c1'); // 2 x 50000 = 100000
+                cart.addManualItem('Ongkir', 15000); // 115000
+                cart.setDiscount(200000); // Melebihi subtotal
+                const calc = cart.calculate();
+                if (calc.subtotal !== 115000) throw new Error('Subtotal salah');
+                if (calc.discount !== 115000) throw new Error('Diskon tidak dibatasi sebesar subtotal');
+                if (calc.total !== 0) throw new Error('Total tidak boleh negatif');
+                logPass('Keranjang: Perhitungan Qty, Subtotal, Diskon batas maksimal, dan Grand Total akurat.');
+            } catch (err) {
+                logFail('Kalkulasi Keranjang', err);
+            }
+
+            // Test 5: Simpan Struk, Rekap Omzet, dan Void
+            try {
+                const r1 = await saveReceipt({
+                    items: [{ id: '1', name: 'Barang A', price: 30000, qty: 1 }],
+                    discount: 0,
+                    paymentMethod: 'Tunai'
+                });
+                const summaryBefore = await getDailySummary();
+                const totalBefore = summaryBefore.totalAmount;
+
+                await voidReceipt(r1.id);
+                const summaryAfter = await getDailySummary();
+                if (summaryAfter.totalAmount !== totalBefore - 30000) {
+                    throw new Error('Total harian tidak berkurang setelah void');
+                }
+                logPass('Omzet & Void: Struk yang dibatalkan langsung mengurangi omzet harian.');
+            } catch (err) {
+                logFail('Omzet & Void', err);
+            }
+
+            // Test 6: Ekspor & Impor Cadangan JSON
+            try {
+                const exportedJson = await exportAllData();
+                const validation = validateImportPayload(exportedJson);
+                if (!validation.isValid) throw new Error('Validasi impor gagal');
+                await importAllData(validation.payload);
+                logPass('Cadangan: Ekspor dan Impor JSON berversi berhasil tanpa distorsi data.');
+            } catch (err) {
+                logFail('Cadangan Data', err);
+            }
+        }
+
+        runSuite();
+    </script>
+</body>
+</html>

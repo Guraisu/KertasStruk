@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KertasStruk - Bikin Struk Penjualan dari HP</title>
+    <meta name="description" content="Buat bukti penjualan gratis dari HP, simpan daftar menu, dan kirim langsung via WhatsApp pelanggan. Tanpa aplikasi, tanpa daftar.">
+    <meta name="theme-color" content="#F9F6F0">
+    
+    <!-- Google Fonts: Fraunces (Heading) & Space Mono (Struk/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Favicon Inline SVG (Bentuk Struk) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='10' width='60' height='80' fill='%23F9F6F0' stroke='%231A1E24' stroke-width='6'/><line x1='35' y1='30' x2='65' y2='30' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='50' x2='65' y2='50' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='70' x2='50' y2='70' stroke='%231A1E24' stroke-width='4'/></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="5" y="2" width="14" height="20" />
+                    <line x1="9" y1="7" x2="15" y2="7" />
+                    <line x1="9" y1="12" x2="15" y2="12" />
+                    <line x1="9" y1="17" x2="11" y2="17" />
+                </svg>
+                <span>KertasStruk</span>
+            </div>
+            <a href="app/" class="btn-ghost">Mulai Buat Struk</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-content">
+                    <h1>Kirim Struk Rapi ke WhatsApp Pelanggan, Cuma Hitungan Detik.</h1>
+                    <p class="subheading">Alat pembuat nota gratis untuk usaha rumahan. Simpan daftar harga, klik barangnya, dan bagikan rincian pesanan langsung dari browser HP.</p>
+                    <div class="cta-group">
+                        <a href="app/" class="btn-primary">Coba KertasStruk Sekarang</a>
+                        <p class="trust-note">Gratis. Tanpa daftar. Data tersimpan aman di HP kamu.</p>
+                    </div>
+                </div>
+                
+                <div class="hero-interactive">
+                    <div class="demo-controls">
+                        <p class="demo-hint">Coba klik menu di bawah untuk tes:</p>
+                        <div class="chip-group" aria-label="Menu contoh">
+                            <button class="chip" data-name="Brownies" data-price="45000">+ Brownies</button>
+                            <button class="chip" data-name="Kopi Susu" data-price="18000">+ Kopi Susu</button>
+                            <button class="chip" data-name="Risol Mayo" data-price="15000">+ Risol Mayo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="receipt-paper">
+                        <div class="receipt-header">
+                            <p class="receipt-shop">TOKO CONTOH</p>
+                            <p class="receipt-date" id="demo-date">12/10/2023 14:00</p>
+                            <div class="divider-dashed"></div>
+                        </div>
+                        <ul class="receipt-items" id="demo-items" aria-live="polite">
+                            <li class="empty-state">Belum ada pesanan masuk</li>
+                        </ul>
+                        <div class="receipt-footer">
+                            <div class="divider-dashed"></div>
+                            <div class="receipt-total-row">
+                                <span>TOTAL</span>
+                                <span id="demo-total">Rp 0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-text" id="demo-reset">[ Kosongkan Kertas ]</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="problem">
+            <div class="container">
+                <h2 class="problem-text">
+                    Pelanggan minta rincian pesanan, tapi kamu capek mengetik ulang di chat? Atau nota kertas tiba-tiba habis?<br>
+                    <span class="highlight">KertasStruk mengubah HP kamu jadi mesin kasir instan.</span>
+                </h2>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="sr-only">Fitur Utama</h2>
+                
+                <!-- Fitur 1: Katalog -->
+                <div class="feature-row">
+                    <div class="feature-visual" aria-hidden="true">
+                        <div class="vis-katalog">
+                            <div class="katalog-item">Nasi Bakar Ayam <span>20.000</span></div>
+                            <div class="katalog-item active">Kue Sus (Box) <span>35.000</span></div>
+                            <div class="katalog-item">Keripik Pisang <span>15.000</span></div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Katalog tersimpan, tinggal klik.</h3>
+                        <p>Ketik daftar menu atau barang jualanmu sekali saja. Begitu ada pesanan masuk, tinggal tap-tap nama barang, total harga dihitung otomatis tanpa kalkulator.</p>
+                    </div>
+                </div>
+
+                <!-- Fitur 2: WhatsApp -->
+                <div class="feature-row reverse">
+                    <div class="feature-visual" aria-hidden="true">
+                        <div class="vis-wa">
+                            <div class="wa-bubble">
+<pre>=== STRUK PESANAN ===
+1x Kue Sus     35.000
+2x Kopi Susu   36.000
+---------------------
+TOTAL       Rp 71.000</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Langsung kirim ke WhatsApp.</h3>
+                        <p>Struk yang sudah jadi akan diubah menjadi teks rapi. Sekali klik, langsung buka aplikasi WA ke nomor pembeli. Rapi, terbaca jelas, dan cepat.</p>
+                    </div>
+                </div>
+
+                <!-- Fitur 3: Rekap -->
+                <div class="feature-row">
+                    <div class="feature-visual" aria-hidden="true">
+                        <div class="vis-rekap">
+                            <span class="rekap-label">Total Masuk Hari Ini</span>
+                            <span class="rekap-amount">450.000</span>
+                            <div class="rekap-line"></div>
+                            <div class="rekap-line-thin"></div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Pantau pemasukan harian.</h3>
+                        <p>Setiap pesanan yang kamu catat hari ini akan ditotal menjadi satu angka besar. Nggak perlu bongkar urutan chat buat ngitung ulang omzet harian.</p>
+                    </div>
+                </div>
+
+                <!-- Fitur 4: Kustomisasi -->
+                <div class="feature-row reverse">
+                    <div class="feature-visual" aria-hidden="true">
+                        <div class="vis-pesan">
+                            <div class="divider-dashed"></div>
+                            <p class="pesan-text">Terima kasih sudah jajan!<br>Follow IG kami @kue_enak</p>
+                            <p class="pesan-footer">====</p>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Bawa nama tokomu.</h3>
+                        <p>Tambahkan nama usaha di bagian atas dan sapaan manis di bawah struk. Identitas jualanmu akan selalu ikut menempel setiap kali kamu mengirimkan nota.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">Cara pakainya cuma 3 langkah:</h2>
+                <ol class="steps-list">
+                    <li>
+                        <span class="step-num">01</span>
+                        <strong>Isi daftar barang</strong>
+                        <p>Masukkan nama barang dan harga jualanmu ke dalam aplikasi.</p>
+                    </li>
+                    <li>
+                        <span class="step-num">02</span>
+                        <strong>Catat pesanan</strong>
+                        <p>Klik barang yang dibeli pelanggan, biarkan KertasStruk menghitung totalnya.</p>
+                    </li>
+                    <li>
+                        <span class="step-num">03</span>
+                        <strong>Kirim buktinya</strong>
+                        <p>Pilih kirim ke WA sebagai teks, atau unduh sebagai gambar ke HP.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="honesty-box">
+            <div class="container honesty-inner">
+                <h2>Bicara jujur soal data kamu.</h2>
+                <p>KertasStruk dirancang agar cepat dan tidak butuh *login*. Oleh karena itu, <strong>semua data menu dan riwayat struk hanya tersimpan di memori browser (HP) kamu sendiri.</strong></p>
+                <p><strong>Apa artinya ini?</strong> Jika kamu menghapus <em>cache/data browser</em>, menghapus riwayat secara menyeluruh, atau berganti HP, maka datamu akan hilang. Kami sarankan gunakan browser utama yang jarang dibersihkan secara paksa. Kami jujur soal ini agar kamu tidak kehilangan data jualanmu.</p>
+            </div>
+        </section>
+
+        <section class="faq">
+            <div class="container faq-inner">
+                <h2 class="section-title">Pertanyaan Umum</h2>
+                <dl class="faq-list">
+                    <dt>Apakah ini beneran gratis?</dt>
+                    <dd>Ya. Tidak ada langganan bulanan, tidak ada batasan jumlah struk, dan tidak ada fitur bayar sembunyi-sembunyi.</dd>
+
+                    <dt>Perlu kuota internet terus-menerus?</dt>
+                    <dd>Saat pertama kali membuka website ini, ya. Tapi setelah terbuka, kamu bisa membuat struk berkali-kali meski sinyal sedang jelek karena aplikasinya berjalan langsung di HP kamu.</dd>
+
+                    <dt>Apakah struk ini sah untuk faktur pajak?</dt>
+                    <dd>Tidak. KertasStruk hanya pembuat bukti penjualan (nota kasir sederhana) untuk pembeli. Ini bukan aplikasi akuntansi perusahaan.</dd>
+
+                    <dt>Bisa diunduh jadi gambar/PDF?</dt>
+                    <dd>Bisa. Nanti di dalam aplikasi ada pilihan untuk menyimpan struk menjadi gambar selain dikirim via teks WhatsApp.</dd>
+                </dl>
+            </div>
+        </section>
+
+        <section class="bottom-cta">
+            <div class="container bottom-cta-inner">
+                <h2>Siap merapikan pesanan hari ini?</h2>
+                <a href="app/" class="btn-primary btn-large">Bikin Struk Pertamamu</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2023 KertasStruk. Dibangun khusus untuk UMKM Indonesia.</p>
+            <p>Hanya alat bantu, bukan pencatat pajak resmi.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

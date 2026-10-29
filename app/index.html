@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>KertasStruk - Pembuat Struk Penjualan UMKM</title>
+    <meta name="description" content="Aplikasi kasir & pembuat bukti penjualan instan untuk usaha rumahan. Bekerja penuh tanpa internet, simpan di HP.">
+    <meta name="theme-color" content="#F9F6F0">
+
+    <!-- Web App Manifest untuk PWA -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="../data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='10' width='60' height='80' fill='%23F9F6F0' stroke='%231A1E24' stroke-width='6'/><line x1='35' y1='30' x2='65' y2='30' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='50' x2='65' y2='50' stroke='%231A1E24' stroke-width='4'/><line x1='35' y1='70' x2='50' y2='70' stroke='%231A1E24' stroke-width='4'/></svg>">
+
+    <!-- Tipografi Resmi Sesuai Landing Page -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="app.css?v=3">
+</head>
+<body>
+
+    <!-- Header & Satu Angka Besar (Pemasukan Hari Ini) -->
+    <header class="app-header no-print">
+        <div class="header-top">
+            <div class="brand-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="5" y="2" width="14" height="20" rx="1"/>
+                    <line x1="9" y1="7" x2="15" y2="7"/>
+                    <line x1="9" y1="12" x2="15" y2="12"/>
+                    <line x1="9" y1="17" x2="11" y2="17"/>
+                </svg>
+                <span>KertasStruk</span>
+            </div>
+            <a href="../" class="brand-link" title="Buka Halaman Utama">
+                <span>Beranda</span>
+            </a>
+        </div>
+
+        <!-- Banner Rekap Omzet Harian -->
+        <div class="rekap-banner" id="rekap-banner" role="region" aria-label="Ringkasan Pemasukan Hari Ini">
+            <div class="rekap-banner-header">
+                <span>Total Pemasukan Hari Ini</span>
+                <span class="rekap-count-note" id="rekap-count">0 struk</span>
+            </div>
+            <div class="rekap-big-number" id="rekap-total">Rp 0</div>
+        </div>
+    </header>
+
+    <!-- Navigasi 4 Tab Utama -->
+    <nav class="nav-tabs no-print" role="tablist" aria-label="Menu Aplikasi">
+        <button class="tab-btn active" role="tab" id="tab-btn-create" aria-selected="true" aria-controls="panel-create" data-tab="create">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span>Buat Struk</span>
+        </button>
+        <button class="tab-btn" role="tab" id="tab-btn-history" aria-selected="false" aria-controls="panel-history" data-tab="history">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Riwayat</span>
+        </button>
+        <button class="tab-btn" role="tab" id="tab-btn-catalog" aria-selected="false" aria-controls="panel-catalog" data-tab="catalog">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span>Katalog</span>
+        </button>
+        <button class="tab-btn" role="tab" id="tab-btn-settings" aria-selected="false" aria-controls="panel-settings" data-tab="settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Pengaturan</span>
+        </button>
+    </nav>
+
+    <!-- Konten Layar Tab -->
+    <main class="main-content no-print">
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: BUAT STRUK                                              -->
+        <!-- ============================================================== -->
+        <section class="tab-panel active" id="panel-create" role="tabpanel" aria-labelledby="tab-btn-create">
+
+            <!-- Bagian Chip Katalog Cepat -->
+            <div class="card-box catalog-quick-bar">
+                <div class="section-header">
+                    <h2 class="section-title">Pilih Barang Jualan</h2>
+                    <span id="quick-catalog-count" class="rekap-count-note"></span>
+                </div>
+
+                <!-- Input Pencarian (Otomatis tampil jika barang > 8) -->
+                <div class="catalog-search-wrap" id="quick-search-container" style="display: none;">
+                    <input type="search" id="quick-search-input" class="input-search" placeholder="Cari nama barang..." aria-label="Cari barang di katalog">
+                </div>
+
+                <div class="chip-scroll-container" id="quick-catalog-chips" aria-label="Daftar cepat barang">
+                    <!-- Chip barang akan di-render di sini -->
+                </div>
+
+                <!-- Form Tambah Item Manual (Sekali Pakai) -->
+                <div class="manual-item-box">
+                    <button type="button" class="toggle-manual-btn" id="btn-toggle-manual" aria-expanded="false" aria-controls="manual-item-form">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>+ Tambah Barang Manual (Sekali Pakai)</span>
+                    </button>
+
+                    <form id="manual-item-form" class="manual-form-grid" style="display: none;">
+                        <input type="text" id="manual-name-input" class="form-input" placeholder="Nama barang" aria-label="Nama barang manual">
+                        <input type="number" id="manual-price-input" class="form-input" placeholder="Harga (Rp)" min="0" step="100" aria-label="Harga barang manual">
+                        <button type="submit" class="btn btn-secondary">Tambah</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bagian Rincian Pesanan Saat Ini -->
+            <div class="card-box">
+                <div class="section-header">
+                    <h2 class="section-title">Daftar Belanja Struk</h2>
+                    <button type="button" class="btn-icon" id="btn-clear-cart" title="Kosongkan daftar pesanan" aria-label="Kosongkan daftar pesanan">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <ul class="cart-list" id="cart-list-items" aria-live="polite">
+                    <li class="cart-empty-state">
+                        Belum ada barang dipilih. Ketuk barang di atas untuk menambahkan ke struk.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Informasi Tambahan Struk -->
+            <div class="card-box">
+                <h2 class="section-title" style="margin-bottom: 0.75rem;">Detail Transaksi</h2>
+
+                <div class="form-group">
+                    <label for="input-customer-name" class="form-label">Nama Pelanggan (opsional)</label>
+                    <input type="text" id="input-customer-name" class="form-input" placeholder="Contoh: Bu Maya">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-discount" class="form-label">Potongan Harga / Diskon Rp (opsional)</label>
+                    <input type="number" id="input-discount" class="form-input" placeholder="0" min="0" step="500">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Metode Pembayaran</label>
+                    <div class="payment-methods-grid" role="radiogroup" aria-label="Metode Pembayaran">
+                        <label>
+                            <input type="radio" name="payment-method" value="Tunai" class="payment-radio-input" checked>
+                            <span class="payment-radio-label">Tunai</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="payment-method" value="Transfer" class="payment-radio-input">
+                            <span class="payment-radio-label">Transfer</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="payment-method" value="QRIS" class="payment-radio-input">
+                            <span class="payment-radio-label">QRIS</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="payment-method" value="Lainnya" class="payment-radio-input">
+                            <span class="payment-radio-label">Lainnya</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-note" class="form-label">Catatan Pesanan (opsional)</label>
+                    <input type="text" id="input-note" class="form-input" placeholder="Contoh: Tanpa sambal / titip di satpam">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: RIWAYAT STRUK                                           -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-btn-history">
+            <div class="section-header">
+                <h2 class="section-title">Riwayat Penjualan</h2>
+            </div>
+
+            <div id="history-container">
+                <!-- Grup riwayat per tanggal akan dirender di sini -->
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 3: KATALOG PRODUK & HARGA                                 -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="panel-catalog" role="tabpanel" aria-labelledby="tab-btn-catalog">
+            <div class="section-header">
+                <h2 class="section-title">Katalog Barang & Harga</h2>
+                <button type="button" class="btn btn-secondary" id="btn-open-add-catalog">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>+ Barang Baru</span>
+                </button>
+            </div>
+
+            <div class="catalog-search-wrap" id="catalog-tab-search-wrap" style="display: none;">
+                <input type="search" id="catalog-search-input" class="input-search" placeholder="Cari nama barang di katalog..." aria-label="Cari barang katalog">
+            </div>
+
+            <div id="catalog-list-container">
+                <!-- Daftar barang katalog akan dirender di sini -->
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 4: PENGATURAN & CADANGAN DATA                              -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="panel-settings" role="tabpanel" aria-labelledby="tab-btn-settings">
+            <div class="card-box">
+                <h2 class="section-title" style="margin-bottom: 0.75rem;">Identitas Toko</h2>
+                <form id="settings-store-form">
+                    <div class="form-group">
+                        <label for="setting-store-name" class="form-label">Nama Toko / Usaha *</label>
+                        <input type="text" id="setting-store-name" class="form-input" required placeholder="Contoh: Dapur Mama">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setting-store-address" class="form-label">Alamat / Wilayah (opsional)</label>
+                        <input type="text" id="setting-store-address" class="form-input" placeholder="Contoh: Tebet, Jakarta Selatan">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setting-store-phone" class="form-label">Nomor WhatsApp Toko (opsional)</label>
+                        <input type="tel" id="setting-store-phone" class="form-input" placeholder="081234567890">
+                    </div>
+
+                    <!-- Pengaturan Logo / Watermark Toko -->
+                    <div class="form-group">
+                        <label class="form-label">Logo / Cap Toko (opsional)</label>
+                        <div class="logo-setting-container">
+                            <div class="logo-preview-box" id="setting-logo-preview-box" style="display: none;">
+                                <img id="setting-logo-preview-img" src="" alt="Pratinjau Logo" class="setting-logo-preview">
+                                <button type="button" class="btn btn-danger-outline" id="btn-remove-logo" style="min-height: 38px; padding: 0.25rem 0.75rem; font-size: 0.75rem;">Hapus Logo</button>
+                            </div>
+                            <label class="btn btn-secondary" style="margin-bottom: 0; cursor: pointer; display: inline-flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <span>Pilih Logo Toko</span>
+                                <input type="file" id="input-logo-file" accept="image/png,image/jpeg,image/webp" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                            </label>
+                            <input type="hidden" id="setting-logo-base64" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="logo-display-mode-group" style="display: none;">
+                        <label class="form-label">Tampilan Logo pada Struk</label>
+                        <div class="payment-methods-grid" style="grid-template-columns: repeat(3, 1fr);" role="radiogroup" aria-label="Posisi Logo">
+                            <label>
+                                <input type="radio" name="logo-mode" value="header" class="payment-radio-input" checked>
+                                <span class="payment-radio-label">Atas Struk</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="logo-mode" value="watermark" class="payment-radio-input">
+                                <span class="payment-radio-label">Watermark</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="logo-mode" value="both" class="payment-radio-input">
+                                <span class="payment-radio-label">Keduanya</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setting-closing-message" class="form-label">Pesan Terima Kasih / Penutup Struk</label>
+                        <textarea id="setting-closing-message" class="form-textarea" rows="3" placeholder="Contoh: Terima kasih atas pesanan Anda! Follow IG @tokokue"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                </form>
+            </div>
+
+            <!-- Bagian Cadangan Data JSON -->
+            <div class="card-box">
+                <h2 class="section-title" style="margin-bottom: 0.5rem;">Cadangan Data Penjualan</h2>
+                <p class="backup-status-text" id="backup-status-label">Terakhir dicadangkan: Belum pernah</p>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <button type="button" class="btn btn-secondary" id="btn-export-backup">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Unduh Cadangan (Ekspor JSON)</span>
+                    </button>
+
+                    <label class="btn btn-secondary" style="margin-bottom: 0; cursor: pointer;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Pulihkan Data (Impor JSON)</span>
+                        <input type="file" id="input-import-file" accept=".json,application/json" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                    </label>
+
+                    <button type="button" class="btn btn-secondary" id="btn-persist-storage">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <span>Kunci Penyimpanan Browser (Anti-Hapus)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kejujuran Data & Batasan Hukum -->
+            <div class="legal-honesty-note">
+                <h3>Kejujuran & Privasi Data</h3>
+                <p>Data jualanmu tersimpan langsung di browser HP ini (local-first). Tidak ada pelacakan, tidak ada server pihak ketiga.</p>
+                <p><strong>Penting:</strong> Struk ini bukti penjualan sederhana untuk pelanggan, bukan faktur pajak resmi perusahaan.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- STICKY BOTTOM TOTAL BAR (Selalu Terlihat di HP pada Tab Buat Struk) -->
+    <!-- ============================================================== -->
+    <aside class="bottom-total-bar no-print" id="bottom-bar-create" aria-label="Total Pembayaran">
+        <div class="bottom-total-inner">
+            <div class="bottom-total-info">
+                <div class="bottom-total-label"><span id="bottom-bar-qty">0</span> barang</div>
+                <div class="bottom-total-amount" id="bottom-bar-total">Rp 0</div>
+            </div>
+            <div class="bottom-btn-group">
+                <button type="button" class="btn btn-primary" id="btn-save-and-preview">
+                    <span>Simpan Struk</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============================================================== -->
+    <!-- MODAL PRATINJAU STRUK (WYSIWYG Kertas Termal & Aksi)           -->
+    <!-- ============================================================== -->
+    <div class="modal-overlay" id="receipt-modal" role="dialog" aria-modal="true" aria-labelledby="modal-receipt-title">
+        <div class="modal-sheet">
+            <div class="modal-header no-print">
+                <h3 class="modal-title" id="modal-receipt-title">Pratinjau Struk</h3>
+                <button type="button" class="btn-close-modal" id="btn-close-receipt-modal" aria-label="Tutup pratinjau struk">&times;</button>
+            </div>
+
+            <!-- Tampilan Kertas Termal Nyata (Hanya ini yang dicetak) -->
+            <div class="receipt-paper-view" id="rendered-receipt-paper">
+                <!-- Dirender via JavaScript persis seperti kertas fisik -->
+            </div>
+
+            <!-- Masukan Nomor WhatsApp Pelanggan Khusus -->
+            <div class="form-group no-print" style="margin-top: 0.5rem;">
+                <label for="input-wa-target" class="form-label">Nomor WhatsApp Pelanggan (opsional)</label>
+                <input type="tel" id="input-wa-target" class="form-input" placeholder="0812xxxxxxxx (kosongkan jika pilih manual di WA)">
+            </div>
+
+            <!-- Tombol Aksi Lengkap -->
+            <div class="receipt-actions-grid no-print">
+                <button type="button" class="btn btn-primary" id="btn-modal-send-wa">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    <span>Kirim WA</span>
+                </button>
+
+                <button type="button" class="btn btn-secondary" id="btn-modal-download-png">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span>Unduh Foto</span>
+                </button>
+
+                <button type="button" class="btn btn-secondary" id="btn-modal-share-png" style="display: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span>Bagikan Foto</span>
+                </button>
+
+                <button type="button" class="btn btn-secondary" id="btn-modal-print-pdf">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    <span>Cetak / PDF</span>
+                </button>
+            </div>
+
+            <p class="print-tip-note no-print" style="font-size: 0.75rem; color: var(--color-ink-light); margin-top: 0.5rem; text-align: center;">
+                Tips cetak di HP: Pada menu printer, pilih <strong>"Simpan sebagai PDF"</strong>.
+            </p>
+
+            <!-- Tombol Batal/Void Khusus Struk Aktif -->
+            <div id="modal-void-container" class="modal-void-wrap no-print">
+                <button type="button" class="btn btn-danger-outline btn-full" id="btn-modal-void-receipt">
+                    <span>Batalkan Struk Ini (Void)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL FORM EDIT / TAMBAH KATALOG                               -->
+    <!-- ============================================================== -->
+    <div class="modal-overlay no-print" id="catalog-modal" role="dialog" aria-modal="true" aria-labelledby="modal-catalog-title">
+        <div class="modal-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-catalog-title">Tambah Barang Katalog</h3>
+                <button type="button" class="btn-close-modal" id="btn-close-catalog-modal" aria-label="Tutup form katalog">&times;</button>
+            </div>
+
+            <form id="catalog-editor-form">
+                <input type="hidden" id="catalog-edit-id" value="">
+
+                <div class="form-group">
+                    <label for="catalog-edit-name" class="form-label">Nama Barang *</label>
+                    <input type="text" id="catalog-edit-name" class="form-input" required placeholder="Contoh: Kue Sus Cokelat">
+                </div>
+
+                <div class="form-group">
+                    <label for="catalog-edit-price" class="form-label">Harga (Rupiah) *</label>
+                    <input type="number" id="catalog-edit-price" class="form-input" required min="0" step="100" placeholder="Contoh: 15000">
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-catalog-modal">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notice no-print" id="app-toast" role="status" aria-live="polite"></div>
+
+    <!-- Script Utama (ES Modules) -->
+    <script type="module" src="app.js?v=3"></script>
+
+</body>
+</html>
